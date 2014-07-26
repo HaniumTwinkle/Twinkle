@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest android:versionCode="1" android:versionName="1.0"
-    package="hanium.twinkle" xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="18"/>
-    <application android:allowBackup="true"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="hanium.twinkle"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
+
+    <application
+        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" android:theme="@style/AppTheme">
-        <activity android:label="@string/app_name" android:name="hanium.twinkle.Main_page">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".Main_page"
+            android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--created by p580 at 2014-07-15 15:33:00-->
-        <activity android:name=".Light_Sensor"/>
-        <!--created by p580 at 2014-07-15 16:10:57-->
-        <activity android:name=".Proximity_Sensor"/>
+        <!-- created by p580 at 2014-07-15 15:33:00 -->
+        <activity android:name=".Light_Sensor" />
+        <!-- created by p580 at 2014-07-15 16:10:57 -->
+        <activity android:name=".Proximity_Sensor" />
+        <activity
+            android:name=".Bluetooth"
+            android:label="@string/title_activity_bluetooth" >
+        </activity>
     </application>
+
 </manifest>
