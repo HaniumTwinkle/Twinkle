@@ -316,31 +316,29 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.option_menu, menu);
+        inflater.inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent serverIntent = null;
-        int id = item.getItemId();
-        if(id == R.id.secure_connect_scan){
+        switch (item.getItemId()) {
+        case R.id.secure_connect_scan:
             // Launch the DeviceListActivity to see devices and do scan
             serverIntent = new Intent(this, DeviceListActivity.class);
             startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
             return true;
-        }
-        else if(id == R.id.insecure_connect_scan){
+        case R.id.insecure_connect_scan:
             // Launch the DeviceListActivity to see devices and do scan
             serverIntent = new Intent(this, DeviceListActivity.class);
             startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
             return true;
-        }
-        else if(id == R.id.discoverable){
+        case R.id.discoverable:
             // Ensure this device is discoverable by others
             ensureDiscoverable();
             return true;
-        }        
+        }
         return false;
     }
 

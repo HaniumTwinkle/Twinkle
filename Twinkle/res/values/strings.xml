@@ -2,9 +2,11 @@
 <resources>
 
     <string name="app_name">Twinkle</string>
-    <string name="hello_world">블루투스 채팅</string>
+    <string name="hello_world">Twinkle</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">블루투스 채팅</string>
+    
+    <string name="action_settings">Settings</string>
 
     <string name="send">보내기</string>
     <string name="not_connected">다른 단말에 연결되어 있지 않습니다.</string>
