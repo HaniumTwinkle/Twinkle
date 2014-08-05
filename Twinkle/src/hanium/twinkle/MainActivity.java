@@ -1,19 +1,24 @@
 package hanium.twinkle;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -252,12 +257,24 @@ public class MainActivity extends Activity {
                 mConversationArrayAdapter.add("Me:  " + writeMessage);
                 break;
             case MESSAGE_READ:
+            	Bulb b = null;
+            	String[] b_info = null;
+            	ArrayList<Bulb> m_list = new ArrayList<Bulb>();
+            	
                 byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 //mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                 if(readMessage.startsWith("LIST ")){
-                	mConversationArrayAdapter.add(readMessage.substring(5));
+                	b_info = readMessage.split(" ");
+                	b = new Bulb(b_info[1],b_info[2]);
+                	
+                	m_list.add(b);
+                	
+                	BulbAdapter m_adapter = new BulbAdapter(getApplicationContext(),R.layout.message,m_list);
+                	
+                	mConversationView.setAdapter(m_adapter);
+                	//mConversationArrayAdapter.add(readMessage.substring(5));
                 }
                 break;
             case MESSAGE_DEVICE_NAME:
@@ -340,6 +357,55 @@ public class MainActivity extends Activity {
             return true;
         }
         return false;
+    }
+    
+    private class BulbAdapter extends ArrayAdapter<Bulb>{
+    	
+    	private ArrayList<Bulb> items;
+
+		public BulbAdapter(Context context, int resource, ArrayList<Bulb> items) {
+			super(context, resource, items);
+			this.items = items;
+			// TODO Auto-generated constructor stub
+		}
+    	@Override
+		public View getView(int position, View convertView, ViewGroup parent){
+			View v = convertView;
+			if(v==null){
+				LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = vi.inflate(R.layout.message, null);
+			}
+			Bulb b = items.get(position);
+			if(b != null){
+				TextView name_text = (TextView)v.findViewById(R.id.bulb_name);
+				TextView id_text = (TextView)v.findViewById(R.id.bulb_id);
+				if(name_text != null){
+					name_text.setText(b.getName());
+				}
+				if(id_text != null){
+					id_text.setText(b.getId());
+				}
+			}
+			
+			return v;
+		}
+    }
+    class Bulb{
+    	private String Name;
+    	private String Id;
+    	
+    	public Bulb(String _Name, String _Id){
+    		this.Name = _Name;
+    		this.Id	= _Id;
+    	}
+    	
+    	public String getName(){
+    		return Name;
+    	}
+    
+    	public String getId(){
+    		return Id;
+    	}
     }
 
 }
