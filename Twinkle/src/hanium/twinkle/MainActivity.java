@@ -252,9 +252,9 @@ public class MainActivity extends Activity {
                 break;
             case MESSAGE_WRITE:
                 byte[] writeBuf = (byte[]) msg.obj;
-                // construct a string from the buffer
+                /// construct a string from the buffer
                 String writeMessage = new String(writeBuf);
-                mConversationArrayAdapter.add("Me:  " + writeMessage);
+                //mConversationArrayAdapter.add("Me:  " + writeMessage);
                 break;
             case MESSAGE_READ:
             	Bulb b = null;
@@ -279,13 +279,13 @@ public class MainActivity extends Activity {
                 break;
             case MESSAGE_DEVICE_NAME:
                 // save the connected device's name
-                mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-                Toast.makeText(getApplicationContext(), "Connected to "
-                               + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                //mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+                //Toast.makeText(getApplicationContext(), "Connected to "
+                //               + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                 break;
             case MESSAGE_TOAST:
-                Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
-                               Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
+                //               Toast.LENGTH_SHORT).show();
                 break;
             }
         }
