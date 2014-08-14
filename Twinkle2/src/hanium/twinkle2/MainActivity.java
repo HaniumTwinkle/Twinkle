@@ -80,8 +80,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
     // Name of the connected device
     private String mConnectedDeviceName = null;
-    // Array adapter for the conversation thread
-    private ArrayAdapter<String> mListArrayAdapter;
     // String buffer for outgoing messages
     private StringBuffer mOutStringBuffer;
     // Local Bluetooth adapter
@@ -89,8 +87,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     // Member object for the chat services
     private BluetoothChatService mChatService = null;
 
-    public BulbAdapter m_adapter = null;
-    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -273,83 +269,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     }
 
 
-    private class BulbAdapter extends ArrayAdapter<Bulb>{
-       // private ViewHolder viewHolder = null;
-    	private LayoutInflater inflater = null;
-    	private ArrayList<Bulb> items = null;
-        private boolean[] isCheckedConfirm;
-        private boolean[] isOnOffConfirm;
-    	
-        
-		public BulbAdapter(Context context, int resource, ArrayList<Bulb> items) {
-			super(context, resource, items);
-			this.items = items;
-			//checkbox의 체크 유뮤 확인용
-			this.isCheckedConfirm = new boolean[items.size()];
-			//on off 확인용(on==1 off==0)
-			this.isOnOffConfirm = new boolean[items.size()];
-				
-			// TODO Auto-generated constructor stub
-		}
-
-		//체크박스를 모두 선택
-        public void setAllChecked(boolean ischeked) {
-            int tempSize = isCheckedConfirm.length;
-            for(int i=0 ; i<tempSize ; i++){
-                isCheckedConfirm[i] = ischeked;
-            }
-        }
-
-        public void setChecked(int position) {
-            isCheckedConfirm[position] = !isCheckedConfirm[position];
-        }/*
-        public ArrayList<Bulb> getChecked(){
-            int tempSize = isCheckedConfirm.length;
-            ArrayList<Bulb> mArrayList = new ArrayList<Bulb>();
-            for(int b=0 ; b<tempSize ; b++){
-                if(isCheckedConfirm[b]){
-                    mArrayList.add(b);
-                }
-            }
-            return mArrayList;
-        }*/
-        
-
-        public int getCount() { 
-            return items.size();
-        }
-        
-        
-		
-    	@Override
-		public View getView(int position, View convertView, ViewGroup parent){
-			View v = convertView;
-			if(v==null){
-				LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.message, null);
-			}
-			Bulb b = items.get(position);
-			if(b != null){
-				TextView name_text = (TextView)v.findViewById(R.id.bulb_name);
-				TextView id_text = (TextView)v.findViewById(R.id.bulb_id);
-				CheckBox check = (CheckBox)v.findViewById(R.id.checkBox1);
-				
-				if(name_text != null){
-					name_text.setText(b.getName());
-				}
-				if(id_text != null){
-					id_text.setText(b.getId());
-				}
-				//if(check != null){
-				//}
-				check.setClickable(false);
-				check.setFocusable(false);
-			}
-			
-			return v;
-		}
-    }
-
 
 
 	@Override
@@ -474,83 +393,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         }
         return false;
 	}
-    private OnItemClickListener mItemClickLitner = new OnItemClickListener(){
-    	@Override
-        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-            Toast.makeText(getApplicationContext(), ""+(position+1), 
-                    Toast.LENGTH_SHORT).show();
- 
-            //m_adapter.setChecked(position);
-            // Data 변경시 호출 Adapter에 Data 변경 사실을 알려줘서 Update 함.
-            m_adapter.notifyDataSetChanged();
- 
-        }
-    };
-
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            case MESSAGE_STATE_CHANGE:
-                if(D) Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
-                switch (msg.arg1) {
-                case BluetoothChatService.STATE_CONNECTED:
-                    //setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
-                    mListArrayAdapter.clear();
-                    break;
-                case BluetoothChatService.STATE_CONNECTING:
-                    //setStatus(R.string.title_connecting);
-                    break;
-                case BluetoothChatService.STATE_LISTEN:
-                case BluetoothChatService.STATE_NONE:
-                    //setStatus(R.string.title_not_connected);
-                    break;
-                }
-                break;
-            case MESSAGE_WRITE:
-                byte[] writeBuf = (byte[]) msg.obj;
-                /// construct a string from the buffer
-                String writeMessage = new String(writeBuf);
-                //mListArrayAdapter.add("Me:  " + writeMessage);
-                break;
-            case MESSAGE_READ:
-            	Illuminance ill = (Illuminance)getFragmentManager().findFragmentById(R.id.Illuminance);
-            	Bulb b = null;
-            	String[] b_info = null;
-            	ArrayList<Bulb> m_list = new ArrayList<Bulb>();
-            	
-                byte[] readBuf = (byte[]) msg.obj;
-                // construct a string from the valid bytes in the buffer
-                String readMessage = new String(readBuf, 0, msg.arg1);
-                //mListArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
-                if(readMessage.startsWith("LIST ")){
-                	b_info = readMessage.split(" ");
-                	
-                	for(int i=1 ; i<b_info.length ; i+=2){
-                		b = new Bulb(false, b_info[i],b_info[i+1]);
-                    	m_list.add(b);
-                    	
-                	}
-                	
-                	m_adapter = new BulbAdapter(getApplicationContext(),R.layout.message,m_list);
-                	
-                	mListView.setAdapter(m_adapter);
-                	//mListArrayAdapter.add(readMessage.substring(5));
-                }
-                break;
-            case MESSAGE_DEVICE_NAME:
-                // save the connected device's name
-                //mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-                //Toast.makeText(getApplicationContext(), "Connected to "
-                //               + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
-                break;
-            case MESSAGE_TOAST:
-                //Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
-                //               Toast.LENGTH_SHORT).show();
-                break;
-            }
-        }
-    };
 
 
 }
