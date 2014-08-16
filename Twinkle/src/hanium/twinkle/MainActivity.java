@@ -100,7 +100,7 @@ public class MainActivity extends Activity {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         // Otherwise, setup the chat session
         } else {
-            //if (mChatService == null) setupChat();
+            if (mChatService == null) setupChat();
         }
     }
 
@@ -312,7 +312,7 @@ public class MainActivity extends Activity {
             // When the request to enable Bluetooth returns
             if (resultCode == Activity.RESULT_OK) {
                 // Bluetooth is now enabled, so set up a chat session
-               // setupChat();
+                setupChat();
             } else {
                 // User did not enable Bluetooth or an error occurred
                 Log.d(TAG, "BT not enabled");
