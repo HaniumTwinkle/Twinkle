@@ -12,19 +12,9 @@ import android.widget.Toast;
 
 public class Logo extends Activity {
     // Debugging
-    public static final String TAG = "BluetoothChat";
+    public static final String TAG = "Logo";
     public static final boolean D = true;
 
-    // Message types sent from the BluetoothChatService Handler
-    public static final int MESSAGE_STATE_CHANGE = 1;
-    public static final int MESSAGE_READ = 2;
-    public static final int MESSAGE_WRITE = 3;
-    public static final int MESSAGE_DEVICE_NAME = 4;
-    public static final int MESSAGE_TOAST = 5;
-
-    // Key names received from the BluetoothChatService Handler
-    public static final String DEVICE_NAME = "device_name";
-    public static final String TOAST = "toast";
 
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
@@ -48,8 +38,12 @@ public class Logo extends Activity {
         	if (!MainActivity.mBluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        // Otherwise, setup the chat session
+
         	}
+            MainActivity.mChatService = new BluetoothChatService(this, MainActivity.mHandler);
+
+            Intent serverIntent = new Intent(this, DeviceListActivity.class);
+            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
         	
         }
 	}
@@ -88,10 +82,10 @@ public class Logo extends Activity {
 	    String address = data.getExtras()
 	        .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
 	        // Get the BluetoothDevice object
-	    //BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+	    BluetoothDevice device = MainActivity.mBluetoothAdapter.getRemoteDevice(address);
 	        // Attempt to connect to the device
-	    //mChatService.connect(device, secure);
-	    }
+	    MainActivity.mChatService.connect(device, secure);
+	}
 	 
 	 
 	@Override
