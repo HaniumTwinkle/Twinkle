@@ -3,6 +3,7 @@ package hanium.twinkle3;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class Logo extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		boolean isConnected;
 		setContentView(R.layout.activity_logo);
         // Get local Bluetooth adapter
         MainActivity.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -42,9 +44,15 @@ public class Logo extends Activity {
         	}
             MainActivity.mChatService = new BluetoothChatService(this, MainActivity.mHandler);
 
-            Intent serverIntent = new Intent(this, DeviceListActivity.class);
-            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
-        	
+           // do{
+
+               // Intent serverIntent = new Intent(this, DeviceListActivity.class);
+               // startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
+                isConnected = MainActivity.mChatService.getState() == BluetoothProfile.STATE_CONNECTED;
+                
+       //     }while(isConnected!=true);
+      //      Intent mainIntent = new Intent(this, MainActivity.class);
+            
         }
 	}
 	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
