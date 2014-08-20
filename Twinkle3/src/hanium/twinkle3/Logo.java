@@ -21,12 +21,20 @@ public class Logo extends Activity {
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
-
+    // Intent variables
+    private Intent enableIntent = null;
+    private Intent MainIntent = null;
+    private Intent serverIntent = null;
+    
+    // for checking connection
+	private boolean isConnected;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		boolean isConnected;
 		setContentView(R.layout.activity_logo);
+		
         // Get local Bluetooth adapter
         MainActivity.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -37,23 +45,25 @@ public class Logo extends Activity {
             return;
         }
         else{ 
-        	if (!MainActivity.mBluetoothAdapter.isEnabled()) {
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        	
+            
+        }
+	}
+	public void onStart() {
+        super.onStart();
+        if (!MainActivity.mBluetoothAdapter.isEnabled()) {
+            enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 
         	}
             MainActivity.mChatService = new BluetoothChatService(this, MainActivity.mHandler);
 
-           // do{
+            //do{
 
-               // Intent serverIntent = new Intent(this, DeviceListActivity.class);
-               // startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
-                isConnected = MainActivity.mChatService.getState() == BluetoothProfile.STATE_CONNECTED;
-                
-       //     }while(isConnected!=true);
-      //      Intent mainIntent = new Intent(this, MainActivity.class);
+            serverIntent = new Intent(this, DeviceListActivity.class);
+            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
             
-        }
+                
 	}
 	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if(D) Log.d(TAG, "onActivityResult " + resultCode);
@@ -67,8 +77,17 @@ public class Logo extends Activity {
 	    case REQUEST_CONNECT_DEVICE_INSECURE:
 	        // When DeviceListActivity returns with a device to connect
 	        if (resultCode == Activity.RESULT_OK) {
-	                connectDevice(data, false);
+	                connectDevice(data, false);	     	                
 	        }
+	        
+	        isConnected = MainActivity.mChatService.getState() == BluetoothProfile.STATE_CONNECTED;
+            if(isConnected==true){
+            	MainIntent = new Intent(this, MainActivity.class);
+              	startActivity(MainIntent);
+               	finish();
+            }
+            else
+                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
 	        break;
 	    case REQUEST_ENABLE_BT:
 	        // When the request to enable Bluetooth returns
