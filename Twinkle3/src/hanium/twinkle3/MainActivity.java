@@ -225,6 +225,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 			}
 			return null;
 		}
+		
+		//public Object instantiateItem
 	}
 
 	/**
@@ -264,5 +266,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 			return rootView;
 		}
 	}
+	
 
 }
