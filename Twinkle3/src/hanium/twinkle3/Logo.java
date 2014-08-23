@@ -1,5 +1,8 @@
 package hanium.twinkle3;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -63,8 +66,20 @@ public class Logo extends Activity {
             serverIntent = new Intent(this, DeviceListActivity.class);
             startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
             
-                
-	}
+//
+    	//	Timer timer = new Timer();
+    		//timer.schedule(task, 2000);
+        }
+        private TimerTask task = new TimerTask(){
+
+    		@Override
+    		public void run() {
+    			MainActivity.OutBuffer = "LIST/";
+    			MainActivity.sendMessage(MainActivity.OutBuffer);
+    			//Toast.makeText(getApplicationContext(),R.string.send_toast, Toast.LENGTH_SHORT).show();
+    		}
+        	
+        };
 	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if(D) Log.d(TAG, "onActivityResult " + resultCode);
 	    switch (requestCode) {
@@ -82,9 +97,13 @@ public class Logo extends Activity {
 	        
 	        isConnected = MainActivity.mChatService.getState() == BluetoothProfile.STATE_CONNECTED;
             if(isConnected==true){
-            	MainIntent = new Intent(this, MainActivity.class);
-              	startActivity(MainIntent);
-               	finish();
+    			MainActivity.OutBuffer = "LIST/";
+    			MainActivity.sendMessage(MainActivity.OutBuffer);
+        		Timer timer = new Timer();
+        		timer.schedule(task, 4000);
+            	//MainIntent = new Intent(this, MainActivity.class);
+              	//startActivity(MainIntent);
+               	//finish();
             }
             else
                 startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
