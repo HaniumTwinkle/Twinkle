@@ -48,6 +48,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 	public static BluetoothAdapter mBluetoothAdapter = null;
     public static BluetoothChatService mChatService = null;
     public static String OutBuffer = null; 
+    
+    public static boolean RECEIVED_EVER = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +89,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-		Timer timer = new Timer();
-		timer.schedule(task, 2000);
+		//Timer timer = new Timer();
+		//timer.schedule(task, 2000);
     }
     private TimerTask task = new TimerTask(){
 
@@ -151,11 +153,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
             	String[] b_info = null;
             	ArrayList<Bulb> m_list = new ArrayList<Bulb>();
             	
-                byte[] readBuf = (byte[]) msg.obj;
+            	byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 //mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                 if(readMessage.startsWith("LIST ")){
+                	
+                	if(RECEIVED_EVER == false){
+                		RECEIVED_EVER = true;
+            			MainActivity.OutBuffer = "Received/";
+            			MainActivity.sendMessage(MainActivity.OutBuffer);
+                	}
+                	
                 	b_info = readMessage.split(" ");
                 	
                 	for(int i=1 ; i<b_info.length ; i+=2){

@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,8 @@ public class Logo extends Activity {
     
     // for checking connection
 	private boolean isConnected;
+	
+	private Timer timer = null;
 	
 	
 	@Override
@@ -66,17 +69,21 @@ public class Logo extends Activity {
             serverIntent = new Intent(this, DeviceListActivity.class);
             startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
             
-//
-    	//	Timer timer = new Timer();
-    		//timer.schedule(task, 2000);
         }
         private TimerTask task = new TimerTask(){
 
     		@Override
     		public void run() {
-    			MainActivity.OutBuffer = "LIST/";
-    			MainActivity.sendMessage(MainActivity.OutBuffer);
-    			//Toast.makeText(getApplicationContext(),R.string.send_toast, Toast.LENGTH_SHORT).show();
+    			if(MainActivity.RECEIVED_EVER == false){
+        			MainActivity.OutBuffer = "LIST/";
+        			MainActivity.sendMessage(MainActivity.OutBuffer);
+        			//Toast.makeText(getApplicationContext(),R.string.send_toast, Toast.LENGTH_SHORT).show();
+        			//SystemClock.sleep(10000);
+    				//timer.schedule(task, 2000);
+    			}
+    			else{
+    				intentMain();
+    			}    				
     		}
         	
         };
@@ -99,11 +106,8 @@ public class Logo extends Activity {
             if(isConnected==true){
     			MainActivity.OutBuffer = "LIST/";
     			MainActivity.sendMessage(MainActivity.OutBuffer);
-        		Timer timer = new Timer();
-        		timer.schedule(task, 4000);
-            	//MainIntent = new Intent(this, MainActivity.class);
-              	//startActivity(MainIntent);
-               	//finish();
+        		timer = new Timer();
+        		timer.schedule(task, 4000, 1000);
             }
             else
                 startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
@@ -121,6 +125,14 @@ public class Logo extends Activity {
 	            finish();
 	        }
 	    }
+	}
+	 
+	private void intentMain(){
+
+    	MainIntent = new Intent(this, MainActivity.class);
+    	timer.cancel();
+      	startActivity(MainIntent);
+       	finish();
 	}
 
 	private void connectDevice(Intent data, boolean secure) {
