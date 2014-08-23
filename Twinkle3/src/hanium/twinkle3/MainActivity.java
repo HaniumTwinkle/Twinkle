@@ -1,7 +1,8 @@
 package hanium.twinkle3;
-
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -15,11 +16,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity implements ActionBar.TabListener{
@@ -44,6 +47,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
     
 	public static BluetoothAdapter mBluetoothAdapter = null;
     public static BluetoothChatService mChatService = null;
+    public static String OutBuffer = null; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +87,19 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-
+		Timer timer = new Timer();
+		timer.schedule(task, 2000);
     }
+    private TimerTask task = new TimerTask(){
+
+		@Override
+		public void run() {
+			MainActivity.OutBuffer = "LIST/";
+			MainActivity.sendMessage(MainActivity.OutBuffer);
+			//Toast.makeText(getApplicationContext(),R.string.send_toast, Toast.LENGTH_SHORT).show();
+		}
+    	
+    };
 
 
     @Override
@@ -266,6 +281,22 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 			return rootView;
 		}
 	}
+	
+    public static void sendMessage(String message) {
+        if (message.length() > 0) {
+            // Get the message bytes and tell the BluetoothChatService to write
+            byte[] send = message.getBytes();
+            mChatService.write(send);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Stop the Bluetooth chat services
+        if (mChatService != null) mChatService.stop();
+    }
+
 	
 
 }

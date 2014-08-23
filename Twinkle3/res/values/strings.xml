@@ -21,6 +21,7 @@
     <string name="title_other_devices">사용가능한 다른 단말</string>
     <string name="button_scan">단말 검색하기</string>
 
+    <string name="send_toast">메세지를 보냄</string>
     <string name="secure_connect">단말 연결하기 - (Secure 모드)</string>
     <string name="insecure_connect">단말 연결하기 - (Insecure 모드)</string>
     <string name="discoverable">이 단말을 검색가능한 상태로 만들기</string>

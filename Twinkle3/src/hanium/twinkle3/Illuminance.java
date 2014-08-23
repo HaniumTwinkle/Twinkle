@@ -36,6 +36,7 @@ public class Illuminance extends Fragment {
             Bundle savedInstanceState){
 		View view = inflater.inflate(R.layout.fragment_illuminance, container, false);
 		//textview = (TextView)view.findViewById(R.id.textView1);
+
 		return view;
 	}
 
