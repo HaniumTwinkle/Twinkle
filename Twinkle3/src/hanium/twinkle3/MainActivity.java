@@ -167,8 +167,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                 	
                 	b_info = readMessage.split(" ");
                 	
-                	for(int i=1 ; i<b_info.length ; i+=2){
-                		b = new Bulb(false, b_info[i],b_info[i+1]);
+                	for(int i=1 ; i<b_info.length ; i+=3){
+                		b = new Bulb(false, b_info[i],b_info[i+1], b_info[i+2]);
                     	m_list.add(b);
                     	
                 	}

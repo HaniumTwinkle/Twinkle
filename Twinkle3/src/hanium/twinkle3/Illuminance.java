@@ -39,5 +39,8 @@ public class Illuminance extends Fragment {
 
 		return view;
 	}
+	private BulbAdapter b_adapter = new BulbAdapter(){
+		
+	};
 
 }
