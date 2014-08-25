@@ -1,5 +1,8 @@
 package hanium.twinkle3;
 
+import hanium.twinkle3.MainActivity.BulbAdapter;
+
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,7 +54,8 @@ public class Logo extends Activity {
             return;
         }
         else{ 
-        	
+
+        	MainActivity.m_list = new ArrayList<Bulb>();
             
         }
 	}

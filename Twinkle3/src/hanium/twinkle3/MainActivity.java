@@ -24,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -62,6 +64,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+    	m_adapter = new BulbAdapter(getApplicationContext(),R.layout.list_format,m_list);
+    	
         mContext = getApplicationContext();
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
@@ -98,7 +103,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 		}
 		//Timer timer = new Timer();
 		//timer.schedule(task, 2000);
-		//m_adapter = new BulbAdapter(getApplicationContext(),R.layout.list_format,m_list);
+
     	
     }
     private TimerTask task = new TimerTask(){
@@ -160,7 +165,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
             case MESSAGE_READ:
             	Bulb b = null;
             	String[] b_info = null;
-            	m_list = new ArrayList<Bulb>();
             	
             	byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
@@ -182,7 +186,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                     	
                 	}
                 	
-                	m_adapter.notifyDataSetChanged();
+                	//m_adapter.notifyDataSetChanged();
                 	
                 	//mConversationView.setAdapter(m_adapter);
                 	//mConversationArrayAdapter.add(readMessage.substring(5));
@@ -363,13 +367,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 	     }
 	     
 	     
-			/*
+			
 	 	@Override
 			public View getView(int position, View convertView, ViewGroup parent){
 				View v = convertView;
 				if(v==null){
 					LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	             v = vi.inflate(R.layout.message, null);
+					v = vi.inflate(R.layout.list_format, null);
 				}
 				Bulb b = items.get(position);
 				if(b != null){
@@ -390,7 +394,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 				}
 				
 				return v;
-			}*/
+			}
 	     
 	 }
 
