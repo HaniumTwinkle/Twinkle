@@ -11,6 +11,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 
@@ -50,12 +52,17 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
     public static String OutBuffer = null; 
     
     public static boolean RECEIVED_EVER = false;
+    public static ArrayList<Bulb> m_list = null;
+    public static Context mContext = null;
+    
+    public static BulbAdapter m_adapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mContext = getApplicationContext();
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -91,6 +98,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 		}
 		//Timer timer = new Timer();
 		//timer.schedule(task, 2000);
+		//m_adapter = new BulbAdapter(getApplicationContext(),R.layout.list_format,m_list);
+    	
     }
     private TimerTask task = new TimerTask(){
 
@@ -151,7 +160,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
             case MESSAGE_READ:
             	Bulb b = null;
             	String[] b_info = null;
-            	ArrayList<Bulb> m_list = new ArrayList<Bulb>();
+            	m_list = new ArrayList<Bulb>();
             	
             	byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
@@ -173,7 +182,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                     	
                 	}
                 	
-                	//m_adapter = new BulbAdapter(getApplicationContext(),R.layout.message,m_list);
+                	m_adapter.notifyDataSetChanged();
                 	
                 	//mConversationView.setAdapter(m_adapter);
                 	//mConversationArrayAdapter.add(readMessage.substring(5));
@@ -306,6 +315,83 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
         if (mChatService != null) mChatService.stop();
     }
 
+
+	public class BulbAdapter extends ArrayAdapter<Bulb>{
+	    // private ViewHolder viewHolder = null;
+	 	 private LayoutInflater inflater = null;
+	     private ArrayList<Bulb> items = null;
+	     private boolean[] isCheckedConfirm;
+	     private boolean[] isOnOffConfirm;
+	 	
+	     
+	     public BulbAdapter(Context context, int resource, ArrayList<Bulb> items) {
+				super(context, resource, items);
+				this.items = items;
+				//checkbox의 체크 유뮤 확인용
+				this.isCheckedConfirm = new boolean[items.size()];
+				//on off 확인용(on==1 off==0)
+				this.isOnOffConfirm = new boolean[items.size()];
+					
+				// TODO Auto-generated constructor stub
+			}
 	
+		//체크박스를 모두 선택
+	     public void setAllChecked(boolean ischeked) {
+	         int tempSize = isCheckedConfirm.length;
+	         for(int i=0 ; i<tempSize ; i++){
+	             isCheckedConfirm[i] = ischeked;
+	         }
+	     }
+	
+	     public void setChecked(int position) {
+	         isCheckedConfirm[position] = !isCheckedConfirm[position];
+	     }/*
+	     public ArrayList<Bulb> getChecked(){
+	         int tempSize = isCheckedConfirm.length;
+	         ArrayList<Bulb> mArrayList = new ArrayList<Bulb>();
+	         for(int b=0 ; b<tempSize ; b++){
+	             if(isCheckedConfirm[b]){
+	                 mArrayList.add(b);
+	             }
+	         }
+	         return mArrayList;
+	     }*/
+	     
+	
+	     public int getCount() { 
+	         return items.size();
+	     }
+	     
+	     
+			/*
+	 	@Override
+			public View getView(int position, View convertView, ViewGroup parent){
+				View v = convertView;
+				if(v==null){
+					LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	             v = vi.inflate(R.layout.message, null);
+				}
+				Bulb b = items.get(position);
+				if(b != null){
+					TextView name_text = (TextView)v.findViewById(R.id.bulb_name);
+					TextView id_text = (TextView)v.findViewById(R.id.bulb_id);
+					CheckBox check = (CheckBox)v.findViewById(R.id.checkBox1);
+					
+					if(name_text != null){
+						name_text.setText(b.getName());
+					}
+					if(id_text != null){
+						id_text.setText(b.getId());
+					}
+					//if(check != null){
+					//}
+					check.setClickable(false);
+					check.setFocusable(false);
+				}
+				
+				return v;
+			}*/
+	     
+	 }
 
 }
