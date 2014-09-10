@@ -22,9 +22,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -116,7 +121,17 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 		}
     	
     };
+/*
+    private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
 
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
+			// TODO Auto-generated method stub
+			m_adapter.getItmes().get(arg2).getName();
+			
+		}
+	};*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -326,6 +341,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 	     private ArrayList<Bulb> items = null;
 	     private boolean[] isCheckedConfirm;
 	     private boolean[] isOnOffConfirm;
+	     
+	     private String buffer;
 	 	
 	     
 	     public BulbAdapter(Context context, int resource, ArrayList<Bulb> items) {
@@ -339,27 +356,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 				// TODO Auto-generated constructor stub
 			}
 	
-		//체크박스를 모두 선택
-	     public void setAllChecked(boolean ischeked) {
-	         int tempSize = isCheckedConfirm.length;
-	         for(int i=0 ; i<tempSize ; i++){
-	             isCheckedConfirm[i] = ischeked;
-	         }
+	     public ArrayList<Bulb> getItmes(){
+	    	 return items;
 	     }
-	
-	     public void setChecked(int position) {
-	         isCheckedConfirm[position] = !isCheckedConfirm[position];
-	     }/*
-	     public ArrayList<Bulb> getChecked(){
-	         int tempSize = isCheckedConfirm.length;
-	         ArrayList<Bulb> mArrayList = new ArrayList<Bulb>();
-	         for(int b=0 ; b<tempSize ; b++){
-	             if(isCheckedConfirm[b]){
-	                 mArrayList.add(b);
-	             }
-	         }
-	         return mArrayList;
-	     }*/
 	     
 	
 	     public int getCount() { 
@@ -369,8 +368,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 	     
 			
 	 	@Override
-			public View getView(int position, View convertView, ViewGroup parent){
+			public View getView(final int position, View convertView, ViewGroup parent){
 				View v = convertView;
+				final Bulb Current_item = m_adapter.getItem(position);
+				
 				if(v==null){
 					LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					v = vi.inflate(R.layout.list_format, null);
@@ -379,7 +380,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 				if(b != null){
 					TextView name_text = (TextView)v.findViewById(R.id.bulb_name);
 					TextView id_text = (TextView)v.findViewById(R.id.bulb_id);
-					CheckBox check = (CheckBox)v.findViewById(R.id.checkBox1);
+					final CheckBox check = (CheckBox)v.findViewById(R.id.checkBox1);
+					final SeekBar seek = (SeekBar)v.findViewById(R.id.seekBar1);
+					Switch swc = (Switch)v.findViewById(R.id.switch1);
+					
+					if(Current_item.getOnOff()==false){
+							seek.setEnabled(false);
+							check.setEnabled(false);
+					}
+							
+					
 					
 					if(name_text != null){
 						name_text.setText(b.getName());
@@ -389,8 +399,76 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 					}
 					//if(check != null){
 					//}
-					check.setClickable(false);
-					check.setFocusable(false);
+					//check.setClickable(false);
+					//check.setFocusable(false);
+					swc.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+
+						@Override
+						public void onCheckedChanged(CompoundButton arg0,
+								boolean arg1) {
+							// TODO Auto-generated method stub
+							Current_item.setOnOff(!Current_item.getOnOff());
+							buffer = null;
+							
+							if(Current_item.getOnOff()==true){
+								buffer ="On "+Current_item.getId();
+								seek.setEnabled(true);
+								check.setEnabled(true);
+							}
+							else{
+								buffer ="Off "+Current_item.getId();
+								seek.setEnabled(false);
+								check.setEnabled(false);
+							}
+							sendMessage(buffer);
+							m_adapter.notifyDataSetChanged();
+							
+							
+							
+						}
+					/*	
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Current_item.setCheck(!Current_item.getCheck());
+							buffer = null;
+							if(Current_item.getCheck()==true)
+								buffer ="On "+Current_item.getId();
+							elsedj
+								buffer ="Off "+Current_item.getId();
+							
+							sendMessage(buffer);
+							m_adapter.notifyDataSetChanged();
+						}*/
+					});
+					
+					seek.setProgress(Current_item.getIntStatus());
+					seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+						
+						@Override
+						public void onStopTrackingTouch(SeekBar seekBar) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onStartTrackingTouch(SeekBar seekBar) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onProgressChanged(SeekBar seekBar, int progress,
+								boolean fromUser) {
+							// TODO Auto-generated method stub
+							Current_item.setStatus(String.valueOf(progress));
+							buffer = null;
+							buffer = "change "+ Current_item.getId()+ progress;
+							sendMessage(buffer);
+
+							m_adapter.notifyDataSetChanged();
+						}
+					});
 				}
 				
 				return v;

@@ -6,6 +6,7 @@ public class Bulb{
 	private String Id;
 	private String Status;
 	private int IntStatus;
+	private boolean OnOff;
 	
 	public Bulb(boolean _Check, String _Name, String _Id, String _Status){
 		Check = _Check;
@@ -13,6 +14,7 @@ public class Bulb{
 		Id	= _Id;
 		Status = _Status;
 		IntStatus = Integer.parseInt(_Status);
+		OnOff = false;
 	}
 	
 	public String getName(){
@@ -46,5 +48,13 @@ public class Bulb{
 	
 	public void setIntStatus(int _Int){
 		IntStatus = _Int;
+	}
+	
+	public void setOnOff(boolean onoff){
+		OnOff = onoff;		
+	}
+	
+	public boolean getOnOff(){
+		return OnOff;
 	}
 }
