@@ -79,7 +79,7 @@ public class Logo extends Activity {
     		@Override
     		public void run() {
     			if(MainActivity.RECEIVED_EVER == false){
-        			MainActivity.OutBuffer = "LIST/";
+        			MainActivity.OutBuffer = "L";
         			MainActivity.sendMessage(MainActivity.OutBuffer);
         			//Toast.makeText(getApplicationContext(),R.string.send_toast, Toast.LENGTH_SHORT).show();
         			//SystemClock.sleep(10000);
@@ -111,7 +111,7 @@ public class Logo extends Activity {
     			MainActivity.OutBuffer = "LIST/";
     			MainActivity.sendMessage(MainActivity.OutBuffer);
         		timer = new Timer();
-        		timer.schedule(task, 4000, 1000);
+        		timer.schedule(task, 1000,1000);
             }
             else
                 startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);

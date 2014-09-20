@@ -15,6 +15,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -110,7 +111,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 		//timer.schedule(task, 2000);
 
     	
-    }
+    }/*
     private TimerTask task = new TimerTask(){
 
 		@Override
@@ -120,7 +121,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 			//Toast.makeText(getApplicationContext(),R.string.send_toast, Toast.LENGTH_SHORT).show();
 		}
     	
-    };
+    };*/
 /*
     private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
 
@@ -185,27 +186,33 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 //mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
-                if(readMessage.startsWith("LIST ")){
+                //if(readMessage.startsWith("LIST")){
                 	
                 	if(RECEIVED_EVER == false){
                 		RECEIVED_EVER = true;
             			MainActivity.OutBuffer = "Received/";
             			MainActivity.sendMessage(MainActivity.OutBuffer);
+            			//int temp = readMessage.charAt(0);
+                    	int temp = Integer.valueOf(readMessage);
+                    			
+            			char id = 'A';
+            			byte num = 0;
+                    	for(int i=0 ; i<temp ; i++){
+                    		b = new Bulb(false,String.valueOf((char)(id+i)),String.valueOf((char)(id+i)),String.valueOf(0));
+                        	m_list.add(b);
+                        	num +=1;
+                    	}
+                	
                 	}
                 	
-                	b_info = readMessage.split(" ");
+                	//b_info = readMessage.split(" ");
                 	
-                	for(int i=1 ; i<b_info.length ; i+=3){
-                		b = new Bulb(false, b_info[i],b_info[i+1], b_info[i+2]);
-                    	m_list.add(b);
-                    	
-                	}
                 	
                 	//m_adapter.notifyDataSetChanged();
                 	
                 	//mConversationView.setAdapter(m_adapter);
                 	//mConversationArrayAdapter.add(readMessage.substring(5));
-                }
+                //}
                 break;
             case MESSAGE_DEVICE_NAME:
                 // save the connected device's name
@@ -348,9 +355,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 	     public BulbAdapter(Context context, int resource, ArrayList<Bulb> items) {
 				super(context, resource, items);
 				this.items = items;
-				//checkbox의 체크 유뮤 확인용
-				this.isCheckedConfirm = new boolean[items.size()];
-				//on off 확인용(on==1 off==0)
+				//checkbox��泥댄겕 �좊� �뺤씤��				this.isCheckedConfirm = new boolean[items.size()];
+				//on off �뺤씤��on==1 off==0)
 				this.isOnOffConfirm = new boolean[items.size()];
 					
 				// TODO Auto-generated constructor stub
@@ -382,7 +388,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 					TextView id_text = (TextView)v.findViewById(R.id.bulb_id);
 					final CheckBox check = (CheckBox)v.findViewById(R.id.checkBox1);
 					final SeekBar seek = (SeekBar)v.findViewById(R.id.seekBar1);
-					Switch swc = (Switch)v.findViewById(R.id.switch1);
+					final Switch swc = (Switch)v.findViewById(R.id.switch1);
+					//swc.setChecked(true);
 					
 					if(Current_item.getOnOff()==false){
 							seek.setEnabled(false);
@@ -411,16 +418,25 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 							buffer = null;
 							
 							if(Current_item.getOnOff()==true){
-								buffer ="On "+Current_item.getId();
+								//swc.setChecked(true);
+								buffer =Current_item.getId();
 								seek.setEnabled(true);
 								check.setEnabled(true);
+								sendMessage(buffer);
+								buffer = Current_item.getStatus();
+								SystemClock.sleep(150);
+								sendMessage(buffer);
 							}
 							else{
-								buffer ="Off "+Current_item.getId();
+								//swc.setChecked(false);
+								buffer =Current_item.getId();
 								seek.setEnabled(false);
 								check.setEnabled(false);
+								sendMessage(buffer);
+								buffer = "0";
+								SystemClock.sleep(150);
+								sendMessage(buffer);
 							}
-							sendMessage(buffer);
 							m_adapter.notifyDataSetChanged();
 							
 							
@@ -463,8 +479,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 							// TODO Auto-generated method stub
 							Current_item.setStatus(String.valueOf(progress));
 							buffer = null;
-							buffer = "change "+ Current_item.getId()+ progress;
+							buffer = Current_item.getId();
 							sendMessage(buffer);
+							buffer = String.valueOf(progress);
+							SystemClock.sleep(150);
+							sendMessage(buffer);
+							SystemClock.sleep(150);
 
 							m_adapter.notifyDataSetChanged();
 						}
