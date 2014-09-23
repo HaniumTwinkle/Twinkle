@@ -1,6 +1,5 @@
 package hanium.twinkle3;
 
-import hanium.twinkle3.MainActivity.BulbAdapter;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -12,7 +11,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,9 +79,6 @@ public class Logo extends Activity {
     			if(MainActivity.RECEIVED_EVER == false){
         			MainActivity.OutBuffer = "L";
         			MainActivity.sendMessage(MainActivity.OutBuffer);
-        			//Toast.makeText(getApplicationContext(),R.string.send_toast, Toast.LENGTH_SHORT).show();
-        			//SystemClock.sleep(10000);
-    				//timer.schedule(task, 2000);
     			}
     			else{
     				intentMain();
@@ -108,8 +103,8 @@ public class Logo extends Activity {
 	        
 	        isConnected = MainActivity.mChatService.getState() == BluetoothProfile.STATE_CONNECTED;
             if(isConnected==true){
-    			MainActivity.OutBuffer = "LIST/";
-    			MainActivity.sendMessage(MainActivity.OutBuffer);
+    			//MainActivity.OutBuffer = "LIST/";
+    			//MainActivity.sendMessage(MainActivity.OutBuffer);
         		timer = new Timer();
         		timer.schedule(task, 1000,1000);
             }

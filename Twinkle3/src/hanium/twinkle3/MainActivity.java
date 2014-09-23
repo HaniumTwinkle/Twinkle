@@ -1,8 +1,6 @@
 package hanium.twinkle3;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -12,20 +10,19 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -64,7 +61,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
     public static Context mContext = null;
     
     public static BulbAdapter m_adapter = null;
+    
 
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,32 +106,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-		//Timer timer = new Timer();
-		//timer.schedule(task, 2000);
+		
+
 
     	
-    }/*
-    private TimerTask task = new TimerTask(){
+    }
+    
 
-		@Override
-		public void run() {
-			MainActivity.OutBuffer = "LIST/";
-			MainActivity.sendMessage(MainActivity.OutBuffer);
-			//Toast.makeText(getApplicationContext(),R.string.send_toast, Toast.LENGTH_SHORT).show();
-		}
-    	
-    };*/
-/*
-    private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
-
-		@Override
-		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-				long arg3) {
-			// TODO Auto-generated method stub
-			m_adapter.getItmes().get(arg2).getName();
-			
-		}
-	};*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -190,15 +170,15 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                 	
                 	if(RECEIVED_EVER == false){
                 		RECEIVED_EVER = true;
-            			MainActivity.OutBuffer = "Received/";
-            			MainActivity.sendMessage(MainActivity.OutBuffer);
+            			//MainActivity.OutBuffer = "Received/";
+            			//MainActivity.sendMessage(MainActivity.OutBuffer);
             			//int temp = readMessage.charAt(0);
-                    	int temp = Integer.valueOf(readMessage);
-                    			
+                    	//int temp = Integer.valueOf(readMessage);
+                    	int temp = readMessage.charAt(0);		
             			char id = 'A';
             			byte num = 0;
                     	for(int i=0 ; i<temp ; i++){
-                    		b = new Bulb(false,String.valueOf((char)(id+i)),String.valueOf((char)(id+i)),String.valueOf(0));
+                    		b = new Bulb(false,String.valueOf((char)(id+i)),String.valueOf((char)(id+i)),String.valueOf('0'));
                         	m_list.add(b);
                         	num +=1;
                     	}
@@ -216,8 +196,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                 break;
             case MESSAGE_DEVICE_NAME:
                 // save the connected device's name
-                //mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-                //Toast.makeText(getApplicationContext(), "Connected to "
+                //String mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+                //Toast.makeText(mContext, "Connected to "
                 //               + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                 break;
             case MESSAGE_TOAST:
@@ -339,6 +319,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
         super.onDestroy();
         // Stop the Bluetooth chat services
         if (mChatService != null) mChatService.stop();
+
     }
 
 
@@ -350,6 +331,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 	     private boolean[] isOnOffConfirm;
 	     
 	     private String buffer;
+	     
+	     private char temp;
 	 	
 	     
 	     public BulbAdapter(Context context, int resource, ArrayList<Bulb> items) {
@@ -408,6 +391,33 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 					//}
 					//check.setClickable(false);
 					//check.setFocusable(false);
+					/*
+					check.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							boolean isChecked = check.isChecked();
+							
+							
+							if(isChecked){
+								sendMessage("Auto on");
+								Current_item.setCheck(isChecked);
+								seek.setEnabled(false);
+								Intent service = new Intent(mContext, AutoService.class);
+								service.putExtra("id",Current_item.getId());
+								startService(service);
+							}
+							else{
+								sendMessage("Auto off");
+								Current_item.setCheck(isChecked);
+								seek.setEnabled(true);
+								Intent service = new Intent(mContext, AutoService.class);
+								stopService(service);
+							}
+						}
+					});*/
+					
 					swc.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
 
 						@Override
@@ -423,9 +433,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 								seek.setEnabled(true);
 								check.setEnabled(true);
 								sendMessage(buffer);
-								buffer = Current_item.getStatus();
-								SystemClock.sleep(150);
+								SystemClock.sleep(50);
+								temp = (char) Current_item.getIntStatus();
+								buffer = String.valueOf(temp);
 								sendMessage(buffer);
+								SystemClock.sleep(50);
 							}
 							else{
 								//swc.setChecked(false);
@@ -433,29 +445,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 								seek.setEnabled(false);
 								check.setEnabled(false);
 								sendMessage(buffer);
-								buffer = "0";
-								SystemClock.sleep(150);
+								buffer = "X";
+								SystemClock.sleep(50);
 								sendMessage(buffer);
+								SystemClock.sleep(50);
 							}
-							m_adapter.notifyDataSetChanged();
-							
-							
-							
+							m_adapter.notifyDataSetChanged();							
 						}
-					/*	
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							Current_item.setCheck(!Current_item.getCheck());
-							buffer = null;
-							if(Current_item.getCheck()==true)
-								buffer ="On "+Current_item.getId();
-							elsedj
-								buffer ="Off "+Current_item.getId();
-							
-							sendMessage(buffer);
-							m_adapter.notifyDataSetChanged();
-						}*/
 					});
 					
 					seek.setProgress(Current_item.getIntStatus());
@@ -481,19 +477,21 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 							buffer = null;
 							buffer = Current_item.getId();
 							sendMessage(buffer);
-							buffer = String.valueOf(progress);
-							SystemClock.sleep(150);
+							temp = (char)progress;
+							buffer = String.valueOf(temp);
+							SystemClock.sleep(50);
 							sendMessage(buffer);
-							SystemClock.sleep(150);
+							SystemClock.sleep(50);
 
 							m_adapter.notifyDataSetChanged();
 						}
 					});
 				}
-				
 				return v;
 			}
 	     
 	 }
+
+
 
 }

@@ -33,6 +33,8 @@
                   android:label="@string/select_device"
                   android:theme="@android:style/Theme.Dialog"
                   android:configChanges="orientation|keyboardHidden" />
+        <service android:name="hanium.twinkle3.AutoService"/>
+        
     </application>
 
 </manifest>
