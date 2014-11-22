@@ -10,7 +10,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -29,7 +27,6 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class MainActivity extends Activity implements ActionBar.TabListener{
@@ -387,36 +384,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 					if(id_text != null){
 						id_text.setText(b.getId());
 					}
-					//if(check != null){
-					//}
-					//check.setClickable(false);
-					//check.setFocusable(false);
-					/*
-					check.setOnClickListener(new OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							boolean isChecked = check.isChecked();
-							
-							
-							if(isChecked){
-								sendMessage("Auto on");
-								Current_item.setCheck(isChecked);
-								seek.setEnabled(false);
-								Intent service = new Intent(mContext, AutoService.class);
-								service.putExtra("id",Current_item.getId());
-								startService(service);
-							}
-							else{
-								sendMessage("Auto off");
-								Current_item.setCheck(isChecked);
-								seek.setEnabled(true);
-								Intent service = new Intent(mContext, AutoService.class);
-								stopService(service);
-							}
-						}
-					});*/
 					
 					swc.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
 

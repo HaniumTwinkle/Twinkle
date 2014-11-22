@@ -107,9 +107,10 @@ public class Logo extends Activity {
     			//MainActivity.sendMessage(MainActivity.OutBuffer);
         		timer = new Timer();
         		timer.schedule(task, 1000,1000);
+        		//isConnected=false;
             }
-            else
-                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
+            //else
+                //startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
 	        break;
 	    case REQUEST_ENABLE_BT:
 	        // When the request to enable Bluetooth returns
@@ -130,6 +131,7 @@ public class Logo extends Activity {
 
     	MainIntent = new Intent(this, MainActivity.class);
     	timer.cancel();
+		MainActivity.RECEIVED_EVER = false;
       	startActivity(MainIntent);
        	finish();
 	}
@@ -144,7 +146,7 @@ public class Logo extends Activity {
 	    MainActivity.mChatService.connect(device, secure);
 	}
 	 
-	 
+	 /*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -159,8 +161,9 @@ public class Logo extends Activity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
+	}*/
 }
