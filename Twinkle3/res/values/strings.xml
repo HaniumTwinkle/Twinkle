@@ -26,7 +26,7 @@
     <string name="insecure_connect">단말 연결하기 - (Insecure 모드)</string>
     <string name="discoverable">이 단말을 검색가능한 상태로 만들기</string>
     
-    <string name="title_illuminance">조도센서</string>
+    <string name="title_illuminance">조명 List</string>
     <string name="title_alarm">알람</string>
     
 </resources>

@@ -247,7 +247,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 		@Override
 		public int getCount() {
 			// Show 3 total pages.
-			return 2;
+			return 1;
 		}
 
 		@Override
@@ -367,13 +367,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 					TextView name_text = (TextView)v.findViewById(R.id.bulb_name);
 					TextView id_text = (TextView)v.findViewById(R.id.bulb_id);
 					final CheckBox check = (CheckBox)v.findViewById(R.id.checkBox1);
+					check.setEnabled(false);
 					final SeekBar seek = (SeekBar)v.findViewById(R.id.seekBar1);
 					final Switch swc = (Switch)v.findViewById(R.id.switch1);
 					//swc.setChecked(true);
 					
 					if(Current_item.getOnOff()==false){
 							seek.setEnabled(false);
-							check.setEnabled(false);
 					}
 							
 					
@@ -398,7 +398,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 								//swc.setChecked(true);
 								buffer =Current_item.getId();
 								seek.setEnabled(true);
-								check.setEnabled(true);
 								sendMessage(buffer);
 								SystemClock.sleep(50);
 								temp = (char) Current_item.getIntStatus();
@@ -410,7 +409,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 								//swc.setChecked(false);
 								buffer =Current_item.getId();
 								seek.setEnabled(false);
-								check.setEnabled(false);
 								sendMessage(buffer);
 								buffer = "X";
 								SystemClock.sleep(50);

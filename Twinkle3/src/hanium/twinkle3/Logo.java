@@ -9,11 +9,18 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
+import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class Logo extends Activity {
@@ -42,6 +49,7 @@ public class Logo extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_logo);
 		
+		
         // Get local Bluetooth adapter
         MainActivity.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -56,6 +64,18 @@ public class Logo extends Activity {
         	MainActivity.m_list = new ArrayList<Bulb>();
             
         }
+        
+        ImageButton bt = (ImageButton)findViewById(R.id.L_menu);
+        bt.setOnClickListener(new ImageButton.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+	            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
+				
+			}
+		});
+        
 	}
 	public void onStart() {
         super.onStart();
@@ -69,23 +89,32 @@ public class Logo extends Activity {
             //do{
 
             serverIntent = new Intent(this, DeviceListActivity.class);
-            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
+            Timer timer2 = new Timer();
+            timer2.schedule(task2, 1000);
             
-        }
-        private TimerTask task = new TimerTask(){
+     }
+	 private TimerTask task2 = new TimerTask(){
 
-    		@Override
-    		public void run() {
-    			if(MainActivity.RECEIVED_EVER == false){
-        			MainActivity.OutBuffer = "L";
-        			MainActivity.sendMessage(MainActivity.OutBuffer);
-    			}
-    			else{
-    				intentMain();
-    			}    				
-    		}
-        	
-        };
+			@Override
+			public void run() {
+	            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);				
+			}
+	    	
+	 };
+     private TimerTask task = new TimerTask(){
+
+		@Override
+		public void run() {
+			if(MainActivity.RECEIVED_EVER == false){
+    			MainActivity.OutBuffer = "L";
+    			MainActivity.sendMessage(MainActivity.OutBuffer);
+			}
+			else{
+				intentMain();
+			}    				
+		}
+    	
+     };
 	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if(D) Log.d(TAG, "onActivityResult " + resultCode);
 	    switch (requestCode) {
@@ -146,24 +175,16 @@ public class Logo extends Activity {
 	    MainActivity.mChatService.connect(device, secure);
 	}
 	 
-	 /*
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.logo, menu);
-		return true;
-	}
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (event.getKeyCode()) {
+                case KeyEvent.KEYCODE_MENU:
+    	            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);	
+                    return true;
+            }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}*/
+        }
+        return super.dispatchKeyEvent(event);
+    }
 }
