@@ -20,13 +20,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity implements ActionBar.TabListener{
@@ -103,8 +106,61 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-		
 
+    	Bulb b = null;
+    	b = new Bulb(false,"Red","R",String.valueOf("100"));
+        m_list.add(b);
+    	b = new Bulb(false,"Green","G",String.valueOf("60"));
+        m_list.add(b);
+    	b = new Bulb(false,"Blue","B",String.valueOf("70"));
+        m_list.add(b);
+
+        Button bt1 = (Button)findViewById(R.id.button1);
+        Button bt2 = (Button)findViewById(R.id.button2);
+        
+        bt1.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				sendMessage("RX");
+				sendMessage("GX");
+				sendMessage("BX");
+				
+			}
+		});
+        
+        bt2.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				sendMessage("R");
+				sendMessage(String.valueOf((char)m_adapter.getItem(0).getIntStatus()));
+				sendMessage("G");
+				sendMessage(String.valueOf((char)m_adapter.getItem(1).getIntStatus()));
+				sendMessage("B");
+				sendMessage(String.valueOf((char)m_adapter.getItem(2).getIntStatus()));
+				
+			}
+		});
+        /*
+        Switch t_swc = (Switch)findViewById(R.id.total_switch);
+        t_swc.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				char temp;
+				if(isChecked){
+				}
+				else{
+				}
+					
+			}
+        	
+        });*/
 
     	
     }
@@ -156,7 +212,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                 //mConversationArrayAdapter.add("Me:  " + writeMessage);
                 break;
             case MESSAGE_READ:
-            	Bulb b = null;
+            	//Bulb b = null;
             	String[] b_info = null;
             	
             	byte[] readBuf = (byte[]) msg.obj;
@@ -165,7 +221,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                 //mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                 //if(readMessage.startsWith("LIST")){
                 	
-                	if(RECEIVED_EVER == false){
+                	/*if(RECEIVED_EVER == false){
                 		RECEIVED_EVER = true;
             			//MainActivity.OutBuffer = "Received/";
             			//MainActivity.sendMessage(MainActivity.OutBuffer);
@@ -180,7 +236,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
                         	num +=1;
                     	}
                 	
-                	}
+                	}*/
                 	
                 	//b_info = readMessage.split(" ");
                 	
@@ -384,7 +440,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 					if(id_text != null){
 						id_text.setText(b.getId());
 					}
-					
 					swc.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
 
 						@Override
@@ -399,11 +454,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 								buffer =Current_item.getId();
 								seek.setEnabled(true);
 								sendMessage(buffer);
-								SystemClock.sleep(50);
 								temp = (char) Current_item.getIntStatus();
 								buffer = String.valueOf(temp);
 								sendMessage(buffer);
-								SystemClock.sleep(50);
 							}
 							else{
 								//swc.setChecked(false);
@@ -411,14 +464,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 								seek.setEnabled(false);
 								sendMessage(buffer);
 								buffer = "X";
-								SystemClock.sleep(50);
 								sendMessage(buffer);
-								SystemClock.sleep(50);
 							}
 							m_adapter.notifyDataSetChanged();							
 						}
 					});
-					
 					seek.setProgress(Current_item.getIntStatus());
 					seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 						
@@ -444,9 +494,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener{
 							sendMessage(buffer);
 							temp = (char)progress;
 							buffer = String.valueOf(temp);
-							SystemClock.sleep(50);
 							sendMessage(buffer);
-							SystemClock.sleep(50);
 
 							m_adapter.notifyDataSetChanged();
 						}

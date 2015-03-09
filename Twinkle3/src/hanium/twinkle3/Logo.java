@@ -79,7 +79,7 @@ public class Logo extends Activity {
 	}
 	public void onStart() {
         super.onStart();
-        if (!MainActivity.mBluetoothAdapter.isEnabled()) {
+        if (!MainActivity.mBluetoothAdapter.isEnabled()) {//블루투스 권한 요청
             enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 
@@ -105,13 +105,14 @@ public class Logo extends Activity {
 
 		@Override
 		public void run() {
-			if(MainActivity.RECEIVED_EVER == false){
+			/*if(MainActivity.RECEIVED_EVER == false){
     			MainActivity.OutBuffer = "L";
     			MainActivity.sendMessage(MainActivity.OutBuffer);
 			}
 			else{
 				intentMain();
-			}    				
+			}*/
+			intentMain();    				
 		}
     	
      };
